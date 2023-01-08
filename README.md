@@ -1,2 +1,2 @@
 # RentalServices
-Software components project 2 from semester 6
+Software components project 2 from semester 5
