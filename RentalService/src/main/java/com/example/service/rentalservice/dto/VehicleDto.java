@@ -3,6 +3,8 @@ package com.example.service.rentalservice.dto;
 public class VehicleDto {
     private Long id;
     private String model;
+    private String vehicleType;
+    private String firmName;
     private Integer price;
 
     public Long getId() {
@@ -19,6 +21,22 @@ public class VehicleDto {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
+    }
+
+    public String getFirmName() {
+        return firmName;
+    }
+
+    public void setFirmName(String firmName) {
+        this.firmName = firmName;
     }
 
     public Integer getPrice() {

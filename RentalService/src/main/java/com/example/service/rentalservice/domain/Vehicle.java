@@ -9,8 +9,8 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String model;
-    @OneToMany(mappedBy = "vehicle")
-    private List<VehicleType> vehicleType;
+    @ManyToOne
+    private VehicleType vehicleType;
     @ManyToOne
     private Firm firm;
     private Integer price;
@@ -31,11 +31,11 @@ public class Vehicle {
         this.model = model;
     }
 
-    public List<VehicleType> getVehicleType() {
+    public VehicleType getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(List<VehicleType> vehicleType) {
+    public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 

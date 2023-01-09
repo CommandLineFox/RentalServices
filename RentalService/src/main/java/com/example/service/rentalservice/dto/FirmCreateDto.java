@@ -3,7 +3,7 @@ package com.example.service.rentalservice.dto;
 public class FirmCreateDto {
     private String name;
     private String description;
-    private Integer vehicleCount;
+    private String cityName;
 
     public String getName() {
         return name;
@@ -21,11 +21,11 @@ public class FirmCreateDto {
         this.description = description;
     }
 
-    public Integer getVehicleCount() {
-        return vehicleCount;
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setVehicleCount(Integer vehicleCount) {
-        this.vehicleCount = vehicleCount;
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 }

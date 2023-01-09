@@ -4,6 +4,7 @@ public class ReviewDto {
     private Long id;
     private Integer grade;
     private String comment;
+    private String firmName;
 
     public Long getId() {
         return id;
@@ -27,5 +28,13 @@ public class ReviewDto {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getFirmName() {
+        return firmName;
+    }
+
+    public void setFirmName(String firmName) {
+        this.firmName = firmName;
     }
 }

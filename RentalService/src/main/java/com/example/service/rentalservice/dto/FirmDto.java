@@ -4,7 +4,7 @@ public class FirmDto {
     private Long id;
     private String name;
     private String description;
-    private Integer vehicleCount;
+    private String cityName;
 
     public Long getId() {
         return id;
@@ -30,11 +30,11 @@ public class FirmDto {
         this.description = description;
     }
 
-    public Integer getVehicleCount() {
-        return vehicleCount;
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setVehicleCount(Integer vehicleCount) {
-        this.vehicleCount = vehicleCount;
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 }

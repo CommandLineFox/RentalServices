@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleTypeServiceImpl implements VehicleTypeService {
-    private VehicleTypeMapper vehicleTypeMapper;
-    private VehicleTypeRepository vehicleTypeRepository;
+    private final VehicleTypeMapper vehicleTypeMapper;
+    private final VehicleTypeRepository vehicleTypeRepository;
 
     public VehicleTypeServiceImpl(VehicleTypeMapper vehicleTypeMapper, VehicleTypeRepository vehicleTypeRepository) {
         this.vehicleTypeMapper = vehicleTypeMapper;

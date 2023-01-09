@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
-    private ReviewMapper reviewMapper;
-    private ReviewRepository reviewRepository;
+    private final ReviewMapper reviewMapper;
+    private final ReviewRepository reviewRepository;
 
     public ReviewServiceImpl(ReviewMapper reviewMapper, ReviewRepository reviewRepository) {
         this.reviewMapper = reviewMapper;

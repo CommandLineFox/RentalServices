@@ -2,6 +2,7 @@ package com.example.service.rentalservice.dto;
 
 public class RentDto {
     private Long id;
+    private String vehicleModel;
     private String startDate;
     private Integer duration;
 
@@ -11,6 +12,14 @@ public class RentDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getVehicleModel() {
+        return vehicleModel;
+    }
+
+    public void setVehicleModel(String vehicleModel) {
+        this.vehicleModel = vehicleModel;
     }
 
     public String getStartDate() {

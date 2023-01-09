@@ -3,19 +3,28 @@ package com.example.service.rentalservice.service.impl;
 import com.example.service.rentalservice.domain.Rent;
 import com.example.service.rentalservice.dto.RentCreateDto;
 import com.example.service.rentalservice.dto.RentDto;
+import com.example.service.rentalservice.listener.helper.MessageHelper;
 import com.example.service.rentalservice.mapper.RentMapper;
 import com.example.service.rentalservice.repository.RentRepository;
 import com.example.service.rentalservice.service.RentService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RentServiceImpl implements RentService {
-    private RentMapper rentMapper;
-    private RentRepository rentRepository;
+    private final RentMapper rentMapper;
+    private final RentRepository rentRepository;
+    private final MessageHelper messageHelper;
+    private final JmsTemplate jmsTemplate;
+    private final String rentDestination;
 
-    public RentServiceImpl(RentMapper rentMapper, RentRepository rentRepository) {
+    public RentServiceImpl(RentMapper rentMapper, RentRepository rentRepository, JmsTemplate jmsTemplate, MessageHelper messageHelper, @Value("${destination.createRent}") String rentDestination) {
         this.rentMapper = rentMapper;
         this.rentRepository = rentRepository;
+        this.jmsTemplate = jmsTemplate;
+        this.messageHelper = messageHelper;
+        this.rentDestination = rentDestination;
     }
 
     @Override
@@ -27,6 +36,7 @@ public class RentServiceImpl implements RentService {
     public RentDto createRent(RentCreateDto rentCreateDto) {
         Rent rent = rentMapper.rentCreateDtoToRent(rentCreateDto);
         rentRepository.save(rent);
+        jmsTemplate.convertAndSend(rentDestination, messageHelper.createTextMessage(rentCreateDto));
         return rentMapper.rentToRentDto(rent);
     }
 

@@ -1,6 +1,5 @@
 package com.example.service.rentalservice.service.impl;
 
-import com.example.service.rentalservice.domain.City;
 import com.example.service.rentalservice.domain.Firm;
 import com.example.service.rentalservice.dto.FirmCreateDto;
 import com.example.service.rentalservice.dto.FirmDto;
@@ -11,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FirmServiceImpl implements FirmService {
-    private FirmMapper firmMapper;
-    private FirmRepository firmRepository;
+    private final FirmMapper firmMapper;
+    private final FirmRepository firmRepository;
 
     public FirmServiceImpl(FirmMapper firmMapper, FirmRepository firmRepository) {
         this.firmMapper = firmMapper;
@@ -39,9 +38,6 @@ public class FirmServiceImpl implements FirmService {
         }
         if (firmDto.getDescription() != null) {
             firm.setDescription(firmDto.getDescription());
-        }
-        if (firmDto.getVehicleCount() != null) {
-            firm.setVehicleCount(firmDto.getVehicleCount());
         }
 
         firmRepository.save(firm);

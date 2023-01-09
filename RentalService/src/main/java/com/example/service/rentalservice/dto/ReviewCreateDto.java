@@ -3,7 +3,7 @@ package com.example.service.rentalservice.dto;
 public class ReviewCreateDto {
     private Integer grade;
     private String comment;
-    private FirmDto firm;
+    private String firmName;
 
     public Integer getGrade() {
         return grade;
@@ -21,11 +21,11 @@ public class ReviewCreateDto {
         this.comment = comment;
     }
 
-    public FirmDto getFirm() {
-        return firm;
+    public String getFirmName() {
+        return firmName;
     }
 
-    public void setFirm(FirmDto firm) {
-        this.firm = firm;
+    public void setFirmName(String firmName) {
+        this.firmName = firmName;
     }
 }

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CityServiceImpl implements CityService {
-    private CityMapper cityMapper;
-    private CityRepository cityRepository;
+    private final CityMapper cityMapper;
+    private final CityRepository cityRepository;
 
     public CityServiceImpl(CityMapper cityMapper, CityRepository cityRepository) {
         this.cityMapper = cityMapper;

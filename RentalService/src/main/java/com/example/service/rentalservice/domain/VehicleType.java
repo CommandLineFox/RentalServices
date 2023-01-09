@@ -8,8 +8,6 @@ public class VehicleType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToOne
-    private Vehicle vehicle;
 
     public Long getId() {
         return id;
@@ -25,13 +23,5 @@ public class VehicleType {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
     }
 }
