@@ -8,6 +8,9 @@ import com.example.service.rentalservice.repository.CityRepository;
 import com.example.service.rentalservice.service.CityService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CityServiceImpl implements CityService {
     private final CityMapper cityMapper;
@@ -21,6 +24,18 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDto findCity(Long id) {
         return null;
+    }
+
+    @Override
+    public List<CityDto> listAll() {
+        List<CityDto> cityDtos = new ArrayList<>();
+        List<City> cities = cityRepository.findAll();
+
+        for (City city : cities) {
+            cityDtos.add(cityMapper.cityToCityDto(city));
+        }
+
+        return cityDtos;
     }
 
     @Override

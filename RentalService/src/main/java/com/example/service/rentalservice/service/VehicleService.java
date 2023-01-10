@@ -9,7 +9,7 @@ import java.util.List;
 public interface VehicleService {
     VehicleDto findVehicle(Long id);
 
-    List<VehicleDto> listAvailableVehicles(String startDate, String endDate, String cityName, String firmName) throws ParseException;
+    List<VehicleDto> listAvailableVehicles(String startDate, String endDate) throws ParseException;
 
     VehicleDto createVehicle(VehicleCreateDto vehicleCreateDto);
 

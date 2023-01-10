@@ -5,10 +5,10 @@ import com.example.service.rentalservice.dto.VehicleDto;
 import com.example.service.rentalservice.service.VehicleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/vehicle")
@@ -27,5 +27,10 @@ public class VehicleController {
     @PostMapping("/update")
     public ResponseEntity<VehicleDto> updateVehicle(@RequestBody VehicleDto vehicleDto) {
         return new ResponseEntity<>(vehicleService.updateVehicle(vehicleDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/list_available")
+    public ResponseEntity<List<VehicleDto>> listVehicles(@RequestParam String startDate, @RequestParam String endDate) throws ParseException {
+        return new ResponseEntity<>(vehicleService.listAvailableVehicles(startDate, endDate), HttpStatus.OK);
     }
 }

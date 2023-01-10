@@ -5,10 +5,9 @@ import com.example.service.rentalservice.dto.FirmDto;
 import com.example.service.rentalservice.service.FirmService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/firm")
@@ -27,5 +26,10 @@ public class FirmController {
     @PostMapping("/update")
     public ResponseEntity<FirmDto> updateFirm(@RequestBody FirmDto firmDto) {
         return new ResponseEntity<>(firmService.updateFirm(firmDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<FirmDto>> listVehicles() {
+        return new ResponseEntity<>(firmService.listAll(), HttpStatus.OK);
     }
 }

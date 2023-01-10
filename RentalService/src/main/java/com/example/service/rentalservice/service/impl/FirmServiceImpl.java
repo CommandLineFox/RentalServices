@@ -8,6 +8,9 @@ import com.example.service.rentalservice.repository.FirmRepository;
 import com.example.service.rentalservice.service.FirmService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class FirmServiceImpl implements FirmService {
     private final FirmMapper firmMapper;
@@ -21,6 +24,18 @@ public class FirmServiceImpl implements FirmService {
     @Override
     public FirmDto findFirm(Long id) {
         return null;
+    }
+
+    @Override
+    public List<FirmDto> listAll() {
+        List<FirmDto> firmDtos = new ArrayList<>();
+        List<Firm> firms = firmRepository.findAll();
+
+        for (Firm firm : firms) {
+            firmDtos.add(firmMapper.firmToFirmDto(firm));
+        }
+
+        return firmDtos;
     }
 
     @Override

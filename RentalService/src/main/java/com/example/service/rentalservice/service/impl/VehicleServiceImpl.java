@@ -42,10 +42,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<VehicleDto> listAvailableVehicles(String startDate, String endDate, String cityName, String firmName) throws ParseException {
+    public List<VehicleDto> listAvailableVehicles(String startDate, String endDate) throws ParseException {
         List<Vehicle> vehicles = vehicleRepository.findAll();
-        vehicles = filterByFirm(vehicles, firmName);
-        vehicles = filterByCity(vehicles, cityName);
         vehicles = filterByAvailability(vehicles, startDate, endDate);
 
         List<VehicleDto> vehicleDtoList = mapVehicles(vehicles);
@@ -77,28 +75,6 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public void deleteVehicle(Long id) {
         vehicleRepository.deleteById(id);
-    }
-
-    private List<Vehicle> filterByFirm(List<Vehicle> vehicles, String firmName) {
-        List<Vehicle> filtered = new ArrayList<>();
-        for (Vehicle vehicle : vehicles) {
-            if (Objects.equals(vehicle.getFirm().getName(), firmName)) {
-                filtered.add(vehicle);
-            }
-        }
-
-        return filtered;
-    }
-
-    private List<Vehicle> filterByCity(List<Vehicle> vehicles, String cityName) {
-        List<Vehicle> filtered = new ArrayList<>();
-        for (Vehicle vehicle : vehicles) {
-            if (Objects.equals(vehicle.getFirm().getCity().getName(), cityName)) {
-                filtered.add(vehicle);
-            }
-        }
-
-        return filtered;
     }
 
     private List<Vehicle> filterByAvailability(List<Vehicle> vehicles, String startDate, String endDate) throws ParseException {

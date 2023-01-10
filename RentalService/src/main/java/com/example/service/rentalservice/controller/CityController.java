@@ -5,10 +5,9 @@ import com.example.service.rentalservice.dto.CityDto;
 import com.example.service.rentalservice.service.CityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/city")
@@ -27,5 +26,10 @@ public class CityController {
     @PostMapping("/update")
     public ResponseEntity<CityDto> updateCity(@RequestBody CityDto cityDto) {
         return new ResponseEntity<>(cityService.updateCity(cityDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<CityDto>> listVehicles() {
+        return new ResponseEntity<>(cityService.listAll(), HttpStatus.OK);
     }
 }
