@@ -5,10 +5,10 @@ import com.example.service.userservice.dto.*;
 import java.util.List;
 
 public interface ManagerService {
-
+    
     List<ManagerDto> nadjiSveManagere();
 
-    ManagerDto nadjiManagera(String id);
+    boolean dalipostojiManager(String username);
 
     ManagerDto dodajManagera(CreateManagerDto createManagerDto);
 
@@ -18,7 +18,8 @@ public interface ManagerService {
 
     ManagerDto unbanujManagera(String id);
 
-    void order(Long id, Integer count);
+    ManagerDto register(CreateManagerDto createManagerDto);
 
+    ManagerDto odobriManagera(String id);
     TokenResponseDto login(TokenRequestDto tokenRequestDto);
 }

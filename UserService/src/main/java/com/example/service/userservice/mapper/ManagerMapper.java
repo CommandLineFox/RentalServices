@@ -24,6 +24,7 @@ public class ManagerMapper {
         managerDto.setCompanyName(manager.getCompanyName());
         managerDto.setEmploymentDate(manager.getEmploymentDate());
         managerDto.setZabrana(manager.isZabrana());
+        managerDto.setOdobren(manager.isOdobren());
         return managerDto;
     }
 
@@ -43,6 +44,7 @@ public class ManagerMapper {
         manager.setCompanyName(createManagerDto.getCompanyName());
         manager.setEmploymentDate(formatter.format(date));
         manager.setZabrana(false);
+        manager.setOdobren(false);
         return manager;
     }
 }

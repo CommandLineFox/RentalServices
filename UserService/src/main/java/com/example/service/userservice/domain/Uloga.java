@@ -9,17 +9,17 @@ import javax.persistence.Id;
 public class Uloga {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int rankId;
+    private int id;
     private int numberOfDays;
     private String rankName;
     private String discount;
 
     public int getRankId() {
-        return rankId;
+        return id;
     }
 
     public void setRankId(int rankId) {
-        this.rankId = rankId;
+        this.id = rankId;
     }
 
     public int getNumberOfDays() {

@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RankRepository extends JpaRepository<Uloga,Long> {
 
+    void deleteById(int id);
+
+    Uloga findById(int id);
 }

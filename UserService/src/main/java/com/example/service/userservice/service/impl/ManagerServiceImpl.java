@@ -1,10 +1,8 @@
 package com.example.service.userservice.service.impl;
 
 import com.example.service.userservice.domain.Manager;
-import com.example.service.userservice.dto.CreateManagerDto;
-import com.example.service.userservice.dto.ManagerDto;
-import com.example.service.userservice.dto.TokenRequestDto;
-import com.example.service.userservice.dto.TokenResponseDto;
+import com.example.service.userservice.domain.User;
+import com.example.service.userservice.dto.*;
 import com.example.service.userservice.exception.NotFoundException;
 import com.example.service.userservice.listener.helper.MessageHelper;
 import com.example.service.userservice.mapper.ManagerMapper;
@@ -14,25 +12,30 @@ import com.example.service.userservice.service.ManagerService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ManagerServiceImpl implements ManagerService {
     private final ManagerMapper managerMapper;
     private final ManagerRepository managerRepository;
     private final TokenService tokenService;
-    private MessageHelper messageHelper;
-    private String orderDestination;
+    private final MessageHelper messageHelper;
+    private final JmsTemplate jmsTemplate;
+    private final String managerDestination;
     //private JmsTemplate jmsTemplate;
 
     public ManagerServiceImpl(ManagerMapper managerMapper, ManagerRepository managerRepository,
-                              TokenService tokenService, @Value("${destination.createOrder}") String orderDestination) {
+                              TokenService tokenService, MessageHelper messageHelper, JmsTemplate jmsTemplate, @Value("${destination.createOrder}") String managerDestination) {
         this.managerMapper = managerMapper;
         this.managerRepository = managerRepository;
         this.tokenService = tokenService;
-        this.orderDestination = orderDestination;
+        this.messageHelper=messageHelper;
+        this.jmsTemplate=jmsTemplate;
+        this.managerDestination = managerDestination;
     }
 
     @Override
@@ -41,8 +44,15 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public ManagerDto nadjiManagera(String id) {
-        return null;
+    public boolean dalipostojiManager(String username) {
+
+        Optional<Manager> managers = managerRepository.findManagerByUsername(username);
+        if(managers==null)
+            return false;
+
+
+
+        return true;
     }
 
     @Override
@@ -54,25 +64,25 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public ManagerDto azurirajManagera(ManagerDto managerDto) {
-        Manager manager = managerRepository.getOne((long) managerDto.getManagerId());
+        Manager manager = managerRepository.findByManagerId(managerDto.getManagerId());
 
-        if (managerDto.getUsername() == null)
+        if (managerDto.getUsername() != null)
             manager.setUsername(managerDto.getUsername());
-        if (managerDto.getPassword() == null)
+        if (managerDto.getPassword() != null)
             manager.setPassword(managerDto.getPassword());
-        if (managerDto.getMail() == null)
+        if (managerDto.getMail() != null)
             manager.setMail(managerDto.getMail());
-        if (managerDto.getPhoneNumber() == null)
+        if (managerDto.getPhoneNumber() != null)
             manager.setPhoneNumber(managerDto.getPhoneNumber());
-        if (managerDto.getDateOfBirth() == null)
+        if (managerDto.getDateOfBirth() != null)
             manager.setDateOfBirth(managerDto.getDateOfBirth());
-        if (managerDto.getName() == null)
+        if (managerDto.getName() != null)
             manager.setName(managerDto.getName());
-        if (managerDto.getSurname() == null)
+        if (managerDto.getSurname() != null)
             manager.setSurname(managerDto.getSurname());
-        if (managerDto.getCompanyName() == null)
+        if (managerDto.getCompanyName() != null)
             manager.setCompanyName(managerDto.getCompanyName());
-        if (managerDto.getEmploymentDate() == null)
+        if (managerDto.getEmploymentDate() != null)
             manager.setEmploymentDate(managerDto.getEmploymentDate());
 
         managerRepository.save(manager);
@@ -82,7 +92,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public ManagerDto banujManagera(String id) {
 
-        Manager manager = managerRepository.getOne(Long.valueOf(id));
+        Manager manager = managerRepository.findByManagerId(Integer.parseInt(id));
         manager.setZabrana(true);
         managerRepository.save(manager);
         return managerMapper.managerToManagerDto(manager);
@@ -91,16 +101,36 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public ManagerDto unbanujManagera(String id) {
 
-        Manager manager = managerRepository.getOne(Long.valueOf(id));
+        Manager manager = managerRepository.findByManagerId(Integer.parseInt(id));
         manager.setZabrana(false);
         managerRepository.save(manager);
         return managerMapper.managerToManagerDto(manager);
     }
 
     @Override
-    public void order(Long id, Integer count) {
-        //  CreateOrderDto orderCreateDto = new CreateOrderDto(count, id);
-        // jmsTemplate.convertAndSend(orderDestination, messageHelper.createTextMessage(orderCreateDto));
+    public ManagerDto odobriManagera(String id) {
+
+        Manager manager = managerRepository.findByManagerId(Integer.parseInt(id));
+        manager.setOdobren(true);
+        managerRepository.save(manager);
+        return managerMapper.managerToManagerDto(manager);
+    }
+    @Override
+    public ManagerDto register(CreateManagerDto createManagerDto) {
+
+
+        Optional<Manager> managers = managerRepository.findManagerByUsername(createManagerDto.getUsername());
+        if(!managers.isPresent())
+        {
+
+            Manager manager = managerMapper.createManagerDtoToManager(createManagerDto);
+            managerRepository.save(manager);
+            System.out.println("Dodadto");
+            ManagerDto managerdto=managerMapper.managerToManagerDto(manager);
+            jmsTemplate.convertAndSend(managerDestination, messageHelper.createTextMessage(managerdto)); //salje za odobrenje accounta
+            return managerdto;
+        }
+        return null;
     }
 
     @Override
@@ -112,16 +142,21 @@ public class ManagerServiceImpl implements ManagerService {
                     .orElseThrow(() -> new NotFoundException(String
                             .format("User with username: %s and password: %s not found.", tokenRequestDto.getUsername(),
                                     tokenRequestDto.getPassword())));
-            //Create token payload
-            Claims claims = Jwts.claims();
-            claims.put("id", manager.getManagerId());
-            claims.put("role", "ROLE_MANAGER");
 
-            //Generate token
-            return new TokenResponseDto(tokenService.generate(claims));
+
+            if(manager.isOdobren() && !manager.isZabrana())
+            {
+                //Create token payload
+                Claims claims = Jwts.claims();
+                claims.put("id", manager.getManagerId());
+                claims.put("role", "ROLE_MANAGER");
+                return new TokenResponseDto(tokenService.generate(claims));
+            }
+
         } catch (Exception e) {
             return null;
         }
+        return null;
 
     }
 

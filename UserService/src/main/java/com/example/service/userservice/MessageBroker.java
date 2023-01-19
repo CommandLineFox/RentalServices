@@ -1,4 +1,4 @@
-package com.example.service.user;
+package com.example.service.userservice;
 
 import org.apache.activemq.broker.BrokerService;
 

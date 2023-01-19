@@ -17,7 +17,7 @@ public interface AdminService {
 
     AdminDto azurirajAdmina(AdminDto adminDto);
 
-    Boolean ukloniAdmina(String id);
+    void ukloniAdmina(String id);
 
     TokenResponseDto login(TokenRequestDto tokenRequestDto);
 }

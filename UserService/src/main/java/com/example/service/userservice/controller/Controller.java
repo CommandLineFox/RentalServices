@@ -2,16 +2,17 @@ package com.example.service.userservice.controller;
 
 import com.example.service.userservice.dto.*;
 import com.example.service.userservice.exception.NotFoundException;
+import com.example.service.userservice.security.CheckSecurity;
 import com.example.service.userservice.service.AdminService;
 import com.example.service.userservice.service.ManagerService;
+import com.example.service.userservice.service.RankService;
 import com.example.service.userservice.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping
 public class Controller {
@@ -19,43 +20,76 @@ public class Controller {
     private final AdminService adminService;
     private final ManagerService managerService;
 
-    public Controller(UserService userService, AdminService adminService, ManagerService managerService) {
+    private final RankService rankService;
+    public Controller(UserService userService, AdminService adminService, ManagerService managerService, RankService rankService) {
         this.userService = userService;
         this.adminService = adminService;
         this.managerService = managerService;
+        this.rankService=rankService;
     }
 
     //ADMIN
     @PostMapping("/admin/update")
-    public ResponseEntity<AdminDto> updateUser(@RequestBody AdminDto adminDto) {
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<AdminDto> updateAdmin(@RequestHeader("Authorization") String authorization, @RequestBody AdminDto adminDto) {
         return new ResponseEntity<>(adminService.azurirajAdmina(adminDto), HttpStatus.OK);
     }
 
-    @PostMapping("/admin/ban")
-    public ResponseEntity<AdminDto> banUser(@RequestBody AdminDto adminDto) {
-        return new ResponseEntity<>(adminService.azurirajAdmina(adminDto), HttpStatus.OK);
+    @PostMapping("/admin/delete")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<AdminDto> deleteAdmin(@RequestHeader("Authorization") String authorization, @RequestBody String adminId) {
+        adminService.ukloniAdmina(adminId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //MANAGER
-    @PostMapping("/manager/register")
-    public ResponseEntity<ManagerDto> sendMailManager(@RequestBody CreateManagerDto createManagerDto) {
+
+    @PostMapping("/manager/add")
+    @CheckSecurity(roles = {"ROLE_MANAGER"})
+    public ResponseEntity<ManagerDto> addManager(@RequestHeader("Authorization") String authorization, @RequestBody CreateManagerDto createManagerDto) {
         return new ResponseEntity<>(managerService.dodajManagera(createManagerDto), HttpStatus.OK);
+    }
+    @PostMapping("/manager/register")
+    @CheckSecurity(roles = {"ROLE_MANAGER"})
+    public ResponseEntity<ManagerDto> sendMailManager(@RequestHeader("Authorization") String authorization, @RequestBody CreateManagerDto createManagerDto) {
+        return new ResponseEntity<>(managerService.register(createManagerDto), HttpStatus.OK);
     }
 
     @PostMapping("/manager/update")
-    ResponseEntity<ManagerDto> updateManager(@RequestBody ManagerDto ManagerDto) {
+    @CheckSecurity(roles = {"ROLE_MANAGER"})
+    ResponseEntity<ManagerDto> updateManager(@RequestHeader("Authorization") String authorization, @RequestBody ManagerDto ManagerDto) {
         return new ResponseEntity<>(managerService.azurirajManagera(ManagerDto), HttpStatus.OK);
     }
 
     @PostMapping("/manager/ban")
-    ResponseEntity<ManagerDto> banManager(@RequestBody String ManagerId) {
+    @CheckSecurity(roles = {"ROLE_MANAGER"})
+    ResponseEntity<ManagerDto> banManager(@RequestHeader("Authorization") String authorization, @RequestBody String ManagerId) {
         return new ResponseEntity<ManagerDto>(managerService.banujManagera(ManagerId), HttpStatus.OK);
     }
 
+    @PostMapping("/manager/unban")
+    @CheckSecurity(roles = {"ROLE_MANAGER"})
+    ResponseEntity<ManagerDto> unbanManager(@RequestHeader("Authorization") String authorization, @RequestBody String ManagerId) {
+        return new ResponseEntity<ManagerDto>(managerService.unbanujManagera(ManagerId), HttpStatus.OK);
+    }
+
+    @PostMapping("/manager/odobri")
+    @CheckSecurity(roles = {"ROLE_MANAGER"})
+    ResponseEntity<ManagerDto> odobriManager(@RequestHeader("Authorization") String authorization, @RequestBody String ManagerId) {
+        return new ResponseEntity<ManagerDto>(managerService.odobriManagera(ManagerId), HttpStatus.OK);
+    }
+
+
     //USER
-    @PostMapping("/user/register")
-    public ResponseEntity<UserDto> addUser(@RequestBody CreateUserDto createUserDto) {
+    @PostMapping("/user/add")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<UserDto> addUser(@RequestHeader("Authorization") String authorization, @RequestBody CreateUserDto createUserDto) {
         return new ResponseEntity<>(userService.dodajUsera(createUserDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/user/register")
+    public ResponseEntity<UserDto> registerUser(@RequestBody CreateUserDto createUserDto) {
+        return new ResponseEntity<>(userService.register(createUserDto), HttpStatus.OK);
     }
 
     @PostMapping("/user/update")
@@ -64,10 +98,56 @@ public class Controller {
     }
 
     @PostMapping("/user/ban")
-    //@CheckSecurity(roles = {"ROLE_ADMIN", "ROLE_USER"})
-    public ResponseEntity<UserDto> banUser(@RequestBody String Json) {
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<UserDto> banUser(@RequestHeader("Authorization") String authorization, @RequestBody String Json) {
         return new ResponseEntity<>(userService.banujUsera(Json), HttpStatus.OK);
 
+    }
+
+    @PostMapping("/user/unban")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<UserDto> unbanUser(@RequestHeader("Authorization") String authorization, @RequestBody String Json) {
+        return new ResponseEntity<>(userService.unbanujUsera(Json), HttpStatus.OK);
+
+    }
+    @PostMapping("/user/odobri")
+    public ResponseEntity<UserDto> odobriUser(@RequestBody String Json) {
+        return new ResponseEntity<>(userService.odobriUsera(Json), HttpStatus.OK);
+
+    }
+
+
+    @PostMapping("/user/updatedan")
+    public ResponseEntity<UserDto> updatedanUser(@ApiIgnore Pageable pageable, @RequestBody String Json) {
+        Page<RankDto> rankovi= rankService.nadjiSveRankove(pageable);
+        return new ResponseEntity<>(userService.updatedan(Json, rankovi), HttpStatus.OK);
+
+    }
+
+    @PostMapping("/user/discount")
+    public ResponseEntity<Float> discountUser(@ApiIgnore Pageable pageable, @RequestBody String Json) {
+        Page<RankDto> rankovi= rankService.nadjiSveRankove(pageable);
+        return new ResponseEntity<>(userService.discount(Json, rankovi), HttpStatus.OK);
+
+    }
+    //RANK
+    @PostMapping("/rank/add")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<RankDto> addRank(@RequestHeader("Authorization") String authorization, @RequestBody CreateRankDto createRankDto) {
+        return new ResponseEntity<>(rankService.dodajRank(createRankDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/rank/update")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<RankDto> updateRank(@RequestHeader("Authorization") String authorization, @RequestBody RankDto rankDto) {
+        return new ResponseEntity<>(rankService.azurirajRank(rankDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/rank/delete")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<RankDto> deleteRank(@RequestHeader("Authorization") String authorization, @RequestBody String Json) {
+        rankService.deleteById(Json);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //LOGIN

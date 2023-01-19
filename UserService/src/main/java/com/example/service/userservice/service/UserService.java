@@ -1,6 +1,7 @@
 package com.example.service.userservice.service;
 
 import com.example.service.userservice.dto.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ public interface UserService {
 
     List<UserDto> nadjiSveUsere();
 
-    UserDto nadjiUsera(String id);
+    boolean dalipostojiUser(String username);
 
     UserDto dodajUsera(CreateUserDto createUserDto);
 
@@ -18,7 +19,12 @@ public interface UserService {
 
     UserDto unbanujUsera(String id);
 
-    UserDto register(UserDto userDto);
+    UserDto odobriUsera(String id);
+
+    Float discount(String id,  Page<RankDto> rankovi);
+    UserDto register(CreateUserDto createUserDto);
+
+    UserDto updatedan(String id,  Page<RankDto> rankovi);
 
     TokenResponseDto login(TokenRequestDto tokenRequestDto);
 }

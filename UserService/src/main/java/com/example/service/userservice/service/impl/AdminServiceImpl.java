@@ -14,6 +14,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,21 +54,21 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AdminDto azurirajAdmina(AdminDto adminDto) {
-        Admin admin = adminRepository.getOne((long) adminDto.getAdminId());
+        Admin admin = adminRepository.findByAdminId(adminDto.getAdminId());
 
-        if (adminDto.getUsername() == null)
+        if (adminDto.getUsername() != null)
             admin.setUsername(adminDto.getUsername());
-        if (adminDto.getPassword() == null)
+        if (adminDto.getPassword() != null)
             admin.setPassword(adminDto.getPassword());
-        if (adminDto.getMail() == null)
+        if (adminDto.getMail() != null)
             admin.setMail(adminDto.getMail());
-        if (adminDto.getPhoneNumber() == null)
+        if (adminDto.getPhoneNumber() != null)
             admin.setPhoneNumber(adminDto.getPhoneNumber());
-        if (adminDto.getDateOfBirth() == null)
+        if (adminDto.getDateOfBirth() != null)
             admin.setDateOfBirth(adminDto.getDateOfBirth());
-        if (adminDto.getName() == null)
+        if (adminDto.getName() != null)
             admin.setName(adminDto.getName());
-        if (adminDto.getSurname() == null)
+        if (adminDto.getSurname() != null)
             admin.setSurname(adminDto.getSurname());
 
         adminRepository.save(admin);
@@ -75,8 +76,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Boolean ukloniAdmina(String id) {
-        return null;
+    @Transactional
+    public void ukloniAdmina(String id) {
+        adminRepository.deleteByAdminId(Integer.parseInt(id));
     }
 
     @Override

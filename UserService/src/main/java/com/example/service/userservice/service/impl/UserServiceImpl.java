@@ -1,10 +1,7 @@
 package com.example.service.userservice.service.impl;
 
 import com.example.service.userservice.domain.User;
-import com.example.service.userservice.dto.CreateUserDto;
-import com.example.service.userservice.dto.TokenRequestDto;
-import com.example.service.userservice.dto.TokenResponseDto;
-import com.example.service.userservice.dto.UserDto;
+import com.example.service.userservice.dto.*;
 import com.example.service.userservice.exception.NotFoundException;
 import com.example.service.userservice.listener.helper.MessageHelper;
 import com.example.service.userservice.mapper.UserMapper;
@@ -14,10 +11,14 @@ import com.example.service.userservice.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -43,8 +44,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto nadjiUsera(String id) {
-        return null;
+    public boolean dalipostojiUser(String username) {
+
+        Optional<User> users = userRepository.findUserByUsername(username);
+
+        if(users==null)
+            return false;
+        else
+            return true;
     }
 
     @Override
@@ -56,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto azurirajUsera(UserDto userDto) {
-        User user = userRepository.getOne((long) userDto.getUserId());
+        User user = userRepository.findByUserId(userDto.getUserId());
 
         if (userDto.getUsername() != null)
             user.setUsername(userDto.getUsername());
@@ -81,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto banujUsera(String id) {
-        User user = userRepository.getOne(Long.valueOf(id));
+        User user = userRepository.findByUserId(Integer.parseInt(id));
         user.setZabrana(true);
         userRepository.save(user);
         return userMapper.userToUserDto(user);
@@ -89,16 +96,78 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto unbanujUsera(String id) {
-        User user = userRepository.getOne(Long.valueOf(id));
+        User user = userRepository.findByUserId(Integer.parseInt(id));
         user.setZabrana(false);
         userRepository.save(user);
         return userMapper.userToUserDto(user);
     }
 
     @Override
-    public UserDto register(UserDto userDto) {
-        jmsTemplate.convertAndSend(userDestination, messageHelper.createTextMessage(userDto));
+    public UserDto odobriUsera(String id) {
+        User user = userRepository.findByUserId(Integer.parseInt(id));
+        user.setOdobren(true);
+        userRepository.save(user);
+        return userMapper.userToUserDto(user);
+    }
+
+    @Override
+    public Float discount(String id, Page<RankDto> rankovi) {
+        User user = userRepository.findByUserId(Integer.parseInt(id));
+        user.setTotalRentalsInDays(user.getTotalRentalsInDays()+1);
+        ArrayList<RankDto> r=new ArrayList<>();
+        for(RankDto rank: rankovi) {
+            r.add(rank);
+        }
+        for(RankDto rank: r) {
+            if(rank.getRankName()==rank.getRankName())
+            {
+                return Float.parseFloat(rank.getDiscount().replace("%",""));
+
+            }
+
+        }
+
+        return (float) 0;
+    }
+
+    @Override
+    public UserDto register(CreateUserDto createUserDto) {
+
+        Optional<User> users = userRepository.findUserByUsername(createUserDto.getUsername());
+
+        if(!users.isPresent())
+        {
+            User user = userMapper.createUserDtoToUser(createUserDto);
+            userRepository.save(user);
+            System.out.println("Dodadto");
+            UserDto userDto=userMapper.userToUserDto(user);
+            jmsTemplate.convertAndSend(userDestination, messageHelper.createTextMessage(userDto)); //salje za odobrenje accounta
+            return userDto;
+        }
         return null;
+    }
+
+    @Override
+    public UserDto updatedan(String id, Page<RankDto> rankovi) {
+
+        User user = userRepository.findByUserId(Integer.parseInt(id));
+        user.setTotalRentalsInDays(user.getTotalRentalsInDays()+1);
+        int trenutnostanje=user.getTotalRentalsInDays()+1;
+        ArrayList<RankDto> r=new ArrayList<>();
+        for(RankDto rank: rankovi) {
+            r.add(rank);
+        }
+        r.sort(Comparator.comparing(RankDto::getNumberOfDays));
+
+        for(RankDto rank: r) {
+            System.out.println(rank.getRankName());
+            if(trenutnostanje>rank.getNumberOfDays())
+            {
+                user.setRank_name(rank.getRankName());
+            }
+        }
+        userRepository.save(user);
+        return userMapper.userToUserDto(user);
     }
 
     @Override
@@ -110,11 +179,14 @@ public class UserServiceImpl implements UserService {
                         .format("User with username: %s and password: %s not found.", tokenRequestDto.getUsername(),
                                 tokenRequestDto.getPassword())));
 
-        //Create token payload
-        Claims claims = Jwts.claims();
-        claims.put("id", user.getUserId());
-        claims.put("role", "ROLE_USER");
-        //Generate token
-        return new TokenResponseDto(tokenService.generate(claims));
+        if (user.isOdobren() && !user.isZabrana()) {
+            //Create token payload
+            Claims claims = Jwts.claims();
+            claims.put("id", user.getUserId());
+            claims.put("role", "ROLE_USER");
+            //Generate token
+            return new TokenResponseDto(tokenService.generate(claims));
+        }
+        return null;
     }
 }

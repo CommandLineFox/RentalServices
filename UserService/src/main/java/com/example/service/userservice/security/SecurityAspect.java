@@ -44,6 +44,7 @@ public class SecurityAspect {
         }
         //If token is not presents return UNAUTHORIZED response
         if (token == null) {
+            System.out.println("USAO OVDE USAO");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         //Try to parse token

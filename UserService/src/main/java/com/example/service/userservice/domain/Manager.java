@@ -22,6 +22,11 @@ public class Manager {
     private String companyName;
     private String employmentDate;
     private boolean zabrana;
+    private boolean odobren;
+
+    public boolean isOdobren() {return odobren;}
+
+    public void setOdobren(boolean odobren) {this.odobren = odobren;}
 
     public boolean isZabrana() {
         return zabrana;

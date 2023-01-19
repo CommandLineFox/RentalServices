@@ -28,9 +28,12 @@ public class UserMapper {
         userDto.setName(user.getName());
         userDto.setSurname(user.getSurname());
 
+
         userDto.setPassportNumber(user.getPassportNumber());
         userDto.setTotalRentalsInDays(user.getTotalRentalsInDays());
         userDto.setZabrana(user.isZabrana());
+        userDto.setOdobren(user.isOdobren());
+        userDto.setRank_name(user.getRank_name());
         return userDto;
     }
 
@@ -49,6 +52,8 @@ public class UserMapper {
         user.setPassportNumber(createUserDto.getPassportNumber());
         user.setTotalRentalsInDays(0);
         user.setZabrana(false);
+        user.setOdobren(false);
+        user.setRank_name("unranked");
         return user;
     }
 }

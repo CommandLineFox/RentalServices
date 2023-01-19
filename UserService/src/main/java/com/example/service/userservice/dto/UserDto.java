@@ -14,6 +14,17 @@ public class UserDto {
     private int totalRentalsInDays;
     private boolean zabrana;
 
+    private boolean odobren;
+    public String rank_name;
+
+    public boolean isOdobren() {return odobren;}
+
+    public void setOdobren(boolean odobren) {this.odobren = odobren;}
+
+    public String getRank_name() {return rank_name;}
+
+    public void setRank_name(String rank_name) {this.rank_name = rank_name;}
+
     public boolean isZabrana() {
         return zabrana;
     }
