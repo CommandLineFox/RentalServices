@@ -11,6 +11,8 @@ public class Rent {
     private Vehicle vehicle;
     private String startDate;
     private Integer duration;
+    private Long userId;
+    private Integer discount;
 
     public Long getId() {
         return id;
@@ -42,5 +44,21 @@ public class Rent {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 }

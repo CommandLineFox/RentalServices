@@ -4,6 +4,7 @@ import com.example.service.rentalservice.domain.Rent;
 import com.example.service.rentalservice.dto.RentCreateDto;
 import com.example.service.rentalservice.dto.RentDeleteDto;
 import com.example.service.rentalservice.dto.RentDto;
+import com.example.service.rentalservice.dto.RentNotificationDto;
 import com.example.service.rentalservice.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class RentMapper {
         rentDto.setVehicleModel(rent.getVehicle().getModel());
         rentDto.setDuration(rent.getDuration());
         rentDto.setStartDate(rent.getStartDate());
+        rentDto.setUserId(rent.getUserId());
         return rentDto;
     }
 
@@ -32,14 +34,24 @@ public class RentMapper {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDateTime localDateTime = LocalDateTime.now();
         rent.setStartDate(dateTimeFormatter.format(localDateTime));
+        rent.setUserId(rentCreateDto.getUserId());
         return rent;
     }
 
     public RentDeleteDto rentToRentDeleteDto(Rent rent) {
         RentDeleteDto rentDeleteDto = new RentDeleteDto();
         rentDeleteDto.setVehicleModel(rent.getVehicle().getModel());
-        rentDeleteDto.setDuration(rent.getDuration());
-        rentDeleteDto.setStartDate(rent.getStartDate());
         return rentDeleteDto;
+    }
+
+    public RentNotificationDto rentCreateDtoToRentNotificationDto(RentCreateDto rentCreateDto) {
+        RentNotificationDto rentNotificationDto = new RentNotificationDto();
+        rentNotificationDto.setVehicleModel(rentCreateDto.getVehicleModel());
+        rentNotificationDto.setDuration(rentCreateDto.getDuration());
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDateTime localDateTime = LocalDateTime.now();
+        rentNotificationDto.setStartDate(dateTimeFormatter.format(localDateTime));
+        return rentNotificationDto;
     }
 }

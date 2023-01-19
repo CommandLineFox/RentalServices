@@ -2,6 +2,7 @@ package com.example.service.rentalservice.controller;
 
 import com.example.service.rentalservice.dto.VehicleCreateDto;
 import com.example.service.rentalservice.dto.VehicleDto;
+import com.example.service.rentalservice.security.CheckSecurity;
 import com.example.service.rentalservice.service.VehicleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +21,20 @@ public class VehicleController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<VehicleDto> createVehicle(@RequestBody VehicleCreateDto vehicleCreateDto) {
+    @CheckSecurity(roles = {"ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<VehicleDto> createVehicle(@RequestHeader("Authorization") String authorization, @RequestBody VehicleCreateDto vehicleCreateDto) {
         return new ResponseEntity<>(vehicleService.createVehicle(vehicleCreateDto), HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<VehicleDto> updateVehicle(@RequestBody VehicleDto vehicleDto) {
+    @CheckSecurity(roles = {"ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<VehicleDto> updateVehicle(@RequestHeader("Authorization") String authorization, @RequestBody VehicleDto vehicleDto) {
         return new ResponseEntity<>(vehicleService.updateVehicle(vehicleDto), HttpStatus.OK);
     }
 
     @GetMapping("/list_available")
-    public ResponseEntity<List<VehicleDto>> listVehicles(@RequestParam String startDate, @RequestParam String endDate) throws ParseException {
+    @CheckSecurity(roles = {"ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<List<VehicleDto>> listVehicles(@RequestHeader("Authorization") String authorization, @RequestParam String startDate, @RequestParam String endDate) throws ParseException {
         return new ResponseEntity<>(vehicleService.listAvailableVehicles(startDate, endDate), HttpStatus.OK);
     }
 }

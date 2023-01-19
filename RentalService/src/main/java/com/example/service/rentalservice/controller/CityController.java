@@ -2,6 +2,7 @@ package com.example.service.rentalservice.controller;
 
 import com.example.service.rentalservice.dto.CityCreateDto;
 import com.example.service.rentalservice.dto.CityDto;
+import com.example.service.rentalservice.security.CheckSecurity;
 import com.example.service.rentalservice.service.CityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +20,20 @@ public class CityController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CityDto> createCity(@RequestBody CityCreateDto cityCreateDto) {
+    @CheckSecurity(roles = {"ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<CityDto> createCity(@RequestHeader("Authorization") String authorization, @RequestBody CityCreateDto cityCreateDto) {
         return new ResponseEntity<>(cityService.createCity(cityCreateDto), HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<CityDto> updateCity(@RequestBody CityDto cityDto) {
+    @CheckSecurity(roles = {"ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<CityDto> updateCity(@RequestHeader("Authorization") String authorization, @RequestBody CityDto cityDto) {
         return new ResponseEntity<>(cityService.updateCity(cityDto), HttpStatus.OK);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<CityDto>> listVehicles() {
+    @CheckSecurity(roles = {"ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<List<CityDto>> listVehicles(@RequestHeader("Authorization") String authorization) {
         return new ResponseEntity<>(cityService.listAll(), HttpStatus.OK);
     }
 }

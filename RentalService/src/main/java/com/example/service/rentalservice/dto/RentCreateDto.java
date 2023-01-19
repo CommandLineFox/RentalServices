@@ -3,6 +3,8 @@ package com.example.service.rentalservice.dto;
 public class RentCreateDto {
     private String vehicleModel;
     private Integer duration;
+    private Long userId;
+    private Integer discount;
 
     public String getVehicleModel() {
         return vehicleModel;
@@ -18,5 +20,13 @@ public class RentCreateDto {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

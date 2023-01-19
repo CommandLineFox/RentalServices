@@ -26,12 +26,14 @@ public class FirmController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<FirmDto> updateFirm(@RequestBody FirmDto firmDto) {
+    @CheckSecurity(roles = {"ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<FirmDto> updateFirm(@RequestHeader("Authorization") String authorization, @RequestBody FirmDto firmDto) {
         return new ResponseEntity<>(firmService.updateFirm(firmDto), HttpStatus.OK);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FirmDto>> listVehicles() {
+    @CheckSecurity(roles = {"ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<List<FirmDto>> listVehicles(@RequestHeader("Authorization") String authorization) {
         return new ResponseEntity<>(firmService.listAll(), HttpStatus.OK);
     }
 }
