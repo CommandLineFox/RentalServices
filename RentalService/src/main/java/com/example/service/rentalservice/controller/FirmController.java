@@ -2,6 +2,7 @@ package com.example.service.rentalservice.controller;
 
 import com.example.service.rentalservice.dto.FirmCreateDto;
 import com.example.service.rentalservice.dto.FirmDto;
+import com.example.service.rentalservice.security.CheckSecurity;
 import com.example.service.rentalservice.service.FirmService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,8 @@ public class FirmController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<FirmDto> createFirm(@RequestBody FirmCreateDto firmCreateDto) {
+    @CheckSecurity(roles = {"ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<FirmDto> createFirm(@RequestHeader("Authorization") String authorization, @RequestBody FirmCreateDto firmCreateDto) {
         return new ResponseEntity<>(firmService.createFirm(firmCreateDto), HttpStatus.OK);
     }
 

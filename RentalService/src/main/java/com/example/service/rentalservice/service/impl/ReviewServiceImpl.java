@@ -8,6 +8,8 @@ import com.example.service.rentalservice.repository.ReviewRepository;
 import com.example.service.rentalservice.service.ReviewService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewMapper reviewMapper;
@@ -45,6 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
     }

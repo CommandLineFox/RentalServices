@@ -8,6 +8,7 @@ import com.example.service.rentalservice.repository.FirmRepository;
 import com.example.service.rentalservice.service.FirmService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class FirmServiceImpl implements FirmService {
     }
 
     @Override
+    @Transactional
     public void deleteFirm(Long id) {
         firmRepository.deleteById(id);
     }

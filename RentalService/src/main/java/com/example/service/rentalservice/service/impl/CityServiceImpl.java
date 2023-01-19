@@ -8,6 +8,7 @@ import com.example.service.rentalservice.repository.CityRepository;
 import com.example.service.rentalservice.service.CityService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional
     public void deleteCity(Long id) {
         cityRepository.deleteById(id);
     }

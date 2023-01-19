@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -28,7 +29,9 @@ public class VehicleServiceImpl implements VehicleService {
     private final JmsTemplate jmsTemplate;
     private final String vehicleListDestination;
 
-    public VehicleServiceImpl(VehicleMapper vehicleMapper, VehicleRepository vehicleRepository, JmsTemplate jmsTemplate, MessageHelper messageHelper, @Value("${destination.listVehicles}") String vehicleListDestination) {
+    public VehicleServiceImpl(VehicleMapper vehicleMapper, VehicleRepository vehicleRepository,
+                              JmsTemplate jmsTemplate, MessageHelper messageHelper,
+                              @Value("${destination.listVehicles}") String vehicleListDestination) {
         this.vehicleMapper = vehicleMapper;
         this.vehicleRepository = vehicleRepository;
         this.jmsTemplate = jmsTemplate;
@@ -73,6 +76,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    @Transactional
     public void deleteVehicle(Long id) {
         vehicleRepository.deleteById(id);
     }

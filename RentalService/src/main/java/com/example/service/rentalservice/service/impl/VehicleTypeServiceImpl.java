@@ -8,6 +8,8 @@ import com.example.service.rentalservice.repository.VehicleTypeRepository;
 import com.example.service.rentalservice.service.VehicleTypeService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class VehicleTypeServiceImpl implements VehicleTypeService {
     private final VehicleTypeMapper vehicleTypeMapper;
@@ -42,6 +44,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     }
 
     @Override
+    @Transactional
     public void deleteVehicleType(Long id) {
         vehicleTypeRepository.deleteById(id);
     }
