@@ -26,5 +26,7 @@ public interface UserService {
 
     UserDto updatedan(String id,  Page<RankDto> rankovi);
 
+    void resetujlozinku(String id);
+    String vratimail(String id);
     TokenResponseDto login(TokenRequestDto tokenRequestDto);
 }

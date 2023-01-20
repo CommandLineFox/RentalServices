@@ -18,7 +18,7 @@ public class RentController {
     }
 
     @PostMapping("/create")
-    @CheckSecurity(roles = {"ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN"})
+    //@CheckSecurity(roles = {"ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN"})
     public ResponseEntity<RentDto> createRent(@RequestHeader("Authorization") String authorization, @RequestBody RentCreateDto rentCreateDto) {
         return new ResponseEntity<>(rentService.createRent(rentCreateDto), HttpStatus.OK);
     }

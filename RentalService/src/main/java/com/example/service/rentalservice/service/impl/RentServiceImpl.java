@@ -51,14 +51,14 @@ public class RentServiceImpl implements RentService {
     @Override
     public RentDto createRent(RentCreateDto rentCreateDto) {
         Rent rent = rentMapper.rentCreateDtoToRent(rentCreateDto);
-        int discount = Retry.decorateSupplier(userServiceRetry, () -> {
+        float discount = Retry.decorateSupplier(userServiceRetry, () -> {
             try {
                 return getDiscount(rentCreateDto.getUserId());
             } catch (NotFoundException e) {
                 throw new RuntimeException(e);
             }
         }).get();
-        rent.setDiscount(discount);
+        rent.setDiscount((int) discount);
         String email = Retry.decorateSupplier(userServiceRetry, () -> {
             try {
                 return getEmail(rentCreateDto.getUserId());
@@ -105,12 +105,10 @@ public class RentServiceImpl implements RentService {
         rentRepository.deleteById(id);
     }
 
-    private Integer getDiscount(Long userId) throws NotFoundException {
-        //get projection from movie service
+    private Float getDiscount(Long userId) throws NotFoundException {
         System.out.println("[" + System.currentTimeMillis() / 1000 + "] Getting discount for user id: " + userId);
         try {
-            Thread.sleep(5000);
-            return userServiceRestTemplate.exchange("api/user/discount/" + userId, HttpMethod.GET, null, Integer.class).getBody();
+            return userServiceRestTemplate.exchange("/user/discount/" + userId, HttpMethod.GET, null, Float.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND))
                 throw new NotFoundException(String.format("User with id: %d not found.", userId));
@@ -121,11 +119,9 @@ public class RentServiceImpl implements RentService {
     }
 
     private String getEmail(Long userId) throws NotFoundException {
-        //get projection from movie service
         System.out.println("[" + System.currentTimeMillis() / 1000 + "] Getting discount for user id: " + userId);
         try {
-            Thread.sleep(5000);
-            return userServiceRestTemplate.exchange("api/user/email/" + userId, HttpMethod.GET, null, String.class).getBody();
+            return userServiceRestTemplate.exchange("/user/email/" + userId, HttpMethod.GET, null, String.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND))
                 throw new NotFoundException(String.format("User with id: %d not found.", userId));

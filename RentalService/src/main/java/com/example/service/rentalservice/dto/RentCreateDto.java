@@ -4,7 +4,6 @@ public class RentCreateDto {
     private String vehicleModel;
     private Integer duration;
     private Long userId;
-    private Integer discount;
 
     public String getVehicleModel() {
         return vehicleModel;
@@ -28,13 +27,5 @@ public class RentCreateDto {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Integer getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Integer discount) {
-        this.discount = discount;
     }
 }

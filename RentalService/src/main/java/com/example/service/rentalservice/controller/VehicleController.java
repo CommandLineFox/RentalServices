@@ -2,6 +2,7 @@ package com.example.service.rentalservice.controller;
 
 import com.example.service.rentalservice.dto.VehicleCreateDto;
 import com.example.service.rentalservice.dto.VehicleDto;
+import com.example.service.rentalservice.dto.VehicleListDto;
 import com.example.service.rentalservice.security.CheckSecurity;
 import com.example.service.rentalservice.service.VehicleService;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class VehicleController {
 
     @GetMapping("/list_available")
     @CheckSecurity(roles = {"ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN"})
-    public ResponseEntity<List<VehicleDto>> listVehicles(@RequestHeader("Authorization") String authorization, @RequestParam String startDate, @RequestParam String endDate) throws ParseException {
+    public ResponseEntity<List<VehicleListDto>> listVehicles(@RequestHeader("Authorization") String authorization, @RequestParam String startDate, @RequestParam String endDate) throws ParseException {
         return new ResponseEntity<>(vehicleService.listAvailableVehicles(startDate, endDate), HttpStatus.OK);
     }
 }

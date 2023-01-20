@@ -4,20 +4,21 @@ import com.example.service.rentalservice.domain.Rent;
 import com.example.service.rentalservice.domain.Vehicle;
 import com.example.service.rentalservice.dto.VehicleCreateDto;
 import com.example.service.rentalservice.dto.VehicleDto;
-import com.example.service.rentalservice.listener.helper.MessageHelper;
+import com.example.service.rentalservice.dto.VehicleListDto;
 import com.example.service.rentalservice.mapper.VehicleMapper;
 import com.example.service.rentalservice.repository.RentRepository;
 import com.example.service.rentalservice.repository.VehicleRepository;
 import com.example.service.rentalservice.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
@@ -25,18 +26,10 @@ public class VehicleServiceImpl implements VehicleService {
     private RentRepository rentRepository;
     private final VehicleMapper vehicleMapper;
     private final VehicleRepository vehicleRepository;
-    private final MessageHelper messageHelper;
-    private final JmsTemplate jmsTemplate;
-    private final String vehicleListDestination;
 
-    public VehicleServiceImpl(VehicleMapper vehicleMapper, VehicleRepository vehicleRepository,
-                              JmsTemplate jmsTemplate, MessageHelper messageHelper,
-                              @Value("${destination.listVehicles}") String vehicleListDestination) {
+    public VehicleServiceImpl(VehicleMapper vehicleMapper, VehicleRepository vehicleRepository) {
         this.vehicleMapper = vehicleMapper;
         this.vehicleRepository = vehicleRepository;
-        this.jmsTemplate = jmsTemplate;
-        this.messageHelper = messageHelper;
-        this.vehicleListDestination = vehicleListDestination;
     }
 
     @Override
@@ -45,13 +38,15 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<VehicleDto> listAvailableVehicles(String startDate, String endDate) throws ParseException {
+    public List<VehicleListDto> listAvailableVehicles(String startDate, String endDate) throws ParseException {
         List<Vehicle> vehicles = vehicleRepository.findAll();
         vehicles = filterByAvailability(vehicles, startDate, endDate);
+        List<VehicleListDto> vehicleListDtoList = new ArrayList<>();
+        for (Vehicle vehicle : vehicles) {
+            vehicleListDtoList.add(vehicleMapper.vehicleToVehicleListDto(vehicle));
+        }
 
-        List<VehicleDto> vehicleDtoList = mapVehicles(vehicles);
-        jmsTemplate.convertAndSend(vehicleListDestination, messageHelper.createTextMessage(vehicleDtoList));
-        return vehicleDtoList;
+        return vehicleListDtoList;
     }
 
     @Override

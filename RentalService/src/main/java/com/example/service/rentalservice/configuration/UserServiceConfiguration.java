@@ -8,9 +8,9 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 @Configuration
 public class UserServiceConfiguration {
     @Bean
-    public RestTemplate userServiceRestTmeplate() {
+    public RestTemplate userServiceRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8080"));
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8761/userservice"));
         return restTemplate;
     }
 }

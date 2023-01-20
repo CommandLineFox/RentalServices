@@ -141,7 +141,13 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             System.out.println("Dodadto");
             UserDto userDto=userMapper.userToUserDto(user);
-            jmsTemplate.convertAndSend(userDestination, messageHelper.createTextMessage(userDto)); //salje za odobrenje accounta
+            SendNotificationDto sendNotificationDto=new SendNotificationDto();
+            sendNotificationDto.setName(user.getName());
+            sendNotificationDto.setSurname(user.getSurname());
+            sendNotificationDto.setUsername(user.getUsername());
+            sendNotificationDto.setEmail(user.getMail());
+            sendNotificationDto.setNotificationType("aktivacioni");
+            jmsTemplate.convertAndSend(userDestination, messageHelper.createTextMessage(sendNotificationDto)); //salje za odobrenje accounta
             return userDto;
         }
         return null;
@@ -168,6 +174,31 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.save(user);
         return userMapper.userToUserDto(user);
+    }
+
+    @Override
+    public void resetujlozinku(String id) {
+        User user = userRepository.findByUserId(Integer.parseInt(id));
+
+        if(user!=null)
+        {
+            SendNotificationDto sendNotificationDto=new SendNotificationDto();
+            sendNotificationDto.setName(user.getName());
+            sendNotificationDto.setSurname(user.getSurname());
+            sendNotificationDto.setUsername(user.getUsername());
+            sendNotificationDto.setEmail(user.getMail());
+            sendNotificationDto.setNotificationType("promenalozinke");
+            jmsTemplate.convertAndSend(userDestination, messageHelper.createTextMessage(sendNotificationDto)); //salje za odobrenje accounta
+
+        }
+
+    }
+
+    @Override
+    public String vratimail(String id) {
+
+        User user = userRepository.findByUserId(Integer.parseInt(id));
+        return user.getMail();
     }
 
     @Override

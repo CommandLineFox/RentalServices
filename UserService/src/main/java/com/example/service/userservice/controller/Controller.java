@@ -116,7 +116,18 @@ public class Controller {
 
     }
 
+    @PostMapping("/user/mail")
+    public ResponseEntity<String> promenilozinku(@RequestBody String Json) {
+        return new ResponseEntity<>(userService.vratimail(Json), HttpStatus.OK);
 
+    }
+
+    @PostMapping("/user/restartpassword")
+    public ResponseEntity<UserDto> vratimail(@RequestBody String Json) {
+        userService.resetujlozinku(Json);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
     @PostMapping("/user/updatedan")
     public ResponseEntity<UserDto> updatedanUser(@ApiIgnore Pageable pageable, @RequestBody String Json) {
         Page<RankDto> rankovi= rankService.nadjiSveRankove(pageable);
@@ -124,12 +135,19 @@ public class Controller {
 
     }
 
+    @GetMapping("/user/discount/{id}")
+    public ResponseEntity<Float> discountUser(@ApiIgnore Pageable pageable, @PathVariable("id") String id) {
+        Page<RankDto> rankovi= rankService.nadjiSveRankove(pageable);
+        return new ResponseEntity<>(userService.discount(id, rankovi), HttpStatus.OK);
+    }
+
     @PostMapping("/user/discount")
-    public ResponseEntity<Float> discountUser(@ApiIgnore Pageable pageable, @RequestBody String Json) {
+    public ResponseEntity<Float> discountUse2r(@ApiIgnore Pageable pageable, @RequestBody String Json) {
         Page<RankDto> rankovi= rankService.nadjiSveRankove(pageable);
         return new ResponseEntity<>(userService.discount(Json, rankovi), HttpStatus.OK);
 
     }
+
     //RANK
     @PostMapping("/rank/add")
     @CheckSecurity(roles = {"ROLE_ADMIN"})

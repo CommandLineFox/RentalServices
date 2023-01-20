@@ -33,7 +33,7 @@ public class CityController {
 
     @GetMapping("/list")
     @CheckSecurity(roles = {"ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN"})
-    public ResponseEntity<List<CityDto>> listVehicles(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<List<CityDto>> listCities(@RequestHeader("Authorization") String authorization) {
         return new ResponseEntity<>(cityService.listAll(), HttpStatus.OK);
     }
 }

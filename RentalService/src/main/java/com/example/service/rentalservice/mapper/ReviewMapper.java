@@ -3,7 +3,6 @@ package com.example.service.rentalservice.mapper;
 import com.example.service.rentalservice.domain.Review;
 import com.example.service.rentalservice.dto.ReviewCreateDto;
 import com.example.service.rentalservice.dto.ReviewDto;
-import com.example.service.rentalservice.repository.CityRepository;
 import com.example.service.rentalservice.repository.FirmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
