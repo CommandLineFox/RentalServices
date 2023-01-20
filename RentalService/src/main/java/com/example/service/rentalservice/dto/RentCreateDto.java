@@ -29,4 +29,12 @@ public class RentCreateDto {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
 }

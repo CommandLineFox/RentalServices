@@ -59,7 +59,16 @@ public class RentServiceImpl implements RentService {
             }
         }).get();
         rent.setDiscount(discount);
+        String email = Retry.decorateSupplier(userServiceRetry, () -> {
+            try {
+                return getEmail(rentCreateDto.getUserId());
+            } catch (NotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }).get();
         RentNotificationDto rentNotificationDto = rentMapper.rentCreateDtoToRentNotificationDto(rentCreateDto);
+        rentNotificationDto.setUserEmail(email);
+
         rentRepository.save(rent);
         jmsTemplate.convertAndSend(createRentDestination, messageHelper.createTextMessage(rentNotificationDto));
         return rentMapper.rentToRentDto(rent);
@@ -83,7 +92,15 @@ public class RentServiceImpl implements RentService {
     @Transactional
     public void deleteRent(Long id) {
         Rent rent = rentRepository.getOne(id);
+        String email = Retry.decorateSupplier(userServiceRetry, () -> {
+            try {
+                return getEmail(rent.getUserId());
+            } catch (NotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }).get();
         RentDeleteDto rentDeleteDto = rentMapper.rentToRentDeleteDto(rent);
+        rentDeleteDto.setUserEmail(email);
         jmsTemplate.convertAndSend(deleteRentDestination, messageHelper.createTextMessage(rentDeleteDto));
         rentRepository.deleteById(id);
     }
@@ -94,6 +111,21 @@ public class RentServiceImpl implements RentService {
         try {
             Thread.sleep(5000);
             return userServiceRestTemplate.exchange("api/user/discount/" + userId, HttpMethod.GET, null, Integer.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND))
+                throw new NotFoundException(String.format("User with id: %d not found.", userId));
+            throw new RuntimeException("Internal server error.");
+        } catch (Exception e) {
+            throw new RuntimeException("Internal server error.");
+        }
+    }
+
+    private String getEmail(Long userId) throws NotFoundException {
+        //get projection from movie service
+        System.out.println("[" + System.currentTimeMillis() / 1000 + "] Getting discount for user id: " + userId);
+        try {
+            Thread.sleep(5000);
+            return userServiceRestTemplate.exchange("api/user/email/" + userId, HttpMethod.GET, null, String.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND))
                 throw new NotFoundException(String.format("User with id: %d not found.", userId));

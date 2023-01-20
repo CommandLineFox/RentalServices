@@ -41,6 +41,7 @@ public class RentMapper {
     public RentDeleteDto rentToRentDeleteDto(Rent rent) {
         RentDeleteDto rentDeleteDto = new RentDeleteDto();
         rentDeleteDto.setVehicleModel(rent.getVehicle().getModel());
+        rentDeleteDto.setNotificationType("otkazano");
         return rentDeleteDto;
     }
 
@@ -52,6 +53,7 @@ public class RentMapper {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDateTime localDateTime = LocalDateTime.now();
         rentNotificationDto.setStartDate(dateTimeFormatter.format(localDateTime));
+        rentNotificationDto.setNotificationType("rezervisano");
         return rentNotificationDto;
     }
 }

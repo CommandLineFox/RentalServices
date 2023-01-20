@@ -4,6 +4,8 @@ public class RentNotificationDto {
     private String vehicleModel;
     private String startDate;
     private Integer duration;
+    private String userEmail;
+    private String notificationType;
 
     public String getVehicleModel() {
         return vehicleModel;
@@ -27,5 +29,21 @@ public class RentNotificationDto {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getNotificationType() {
+        return notificationType;
+    }
+
+    public void setNotificationType(String notificationType) {
+        this.notificationType = notificationType;
     }
 }
