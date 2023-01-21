@@ -1,8 +1,5 @@
 package com.example.service.notification.dto;
 
-
-
-
 public class SendNotificationDto {
     private String email;
     private String name;

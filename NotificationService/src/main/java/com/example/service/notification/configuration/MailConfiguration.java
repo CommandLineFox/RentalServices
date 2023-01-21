@@ -1,6 +1,5 @@
 package com.example.service.notification.configuration;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.mail.*;
@@ -10,15 +9,12 @@ import java.util.Properties;
 
 @Configuration
 public class MailConfiguration {
+    public void mailSenderhref(String title, String link, String poruka, String mail) {
+        String host = "smtp.gmail.com";
+        final String user = "";//change accordingly
+        final String password = "";//change accordingly
 
-
-    public void mailSenderhref(String title, String link, String poruka, String mail)
-    {
-        String host="smtp.gmail.com";
-        final String user="";//change accordingly
-        final String password="";//change accordingly
-
-        String to=mail;//change accordingly
+        String to = mail;//change accordingly
 
         //Get the session object
         Properties props = new Properties();
@@ -30,7 +26,7 @@ public class MailConfiguration {
         Session session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(user,password);
+                        return new PasswordAuthentication(user, password);
                     }
                 });
 
@@ -38,11 +34,11 @@ public class MailConfiguration {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(user));
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(title);
-            String url="https://www.gledajcrtace.xyz/";
-            String content="<a href='"+url+"'>"+link+"</a>";
-            message.setContent(poruka+" "+content,"text/html; charset=utf-8");
+            String url = "https://www.gledajcrtace.xyz/";
+            String content = "<a href='" + url + "'>" + link + "</a>";
+            message.setContent(poruka + " " + content, "text/html; charset=utf-8");
 
 
             //send the message
@@ -50,17 +46,17 @@ public class MailConfiguration {
 
             System.out.println("message sent successfully...");
 
-        } catch (MessagingException e) {e.printStackTrace();}
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
+    public void mailSender(String title, String poruka, String mail) {
+        String host = "smtp.gmail.com";
+        final String user = "";//change accordingly
+        final String password = "";//change accordingly
 
-    public void mailSender(String title, String poruka, String mail)
-    {
-        String host="smtp.gmail.com";
-        final String user="";//change accordingly
-        final String password="";//change accordingly
-
-        String to=mail;//change accordingly
+        String to = mail;//change accordingly
 
         //Get the session object
         Properties props = new Properties();
@@ -72,7 +68,7 @@ public class MailConfiguration {
         Session session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(user,password);
+                        return new PasswordAuthentication(user, password);
                     }
                 });
 
@@ -80,10 +76,10 @@ public class MailConfiguration {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(user));
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(title);
 
-            message.setContent(poruka,"text/html; charset=utf-8");
+            message.setContent(poruka, "text/html; charset=utf-8");
 
 
             //send the message
@@ -91,6 +87,8 @@ public class MailConfiguration {
 
             System.out.println("message sent successfully...");
 
-        } catch (MessagingException e) {e.printStackTrace();}
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

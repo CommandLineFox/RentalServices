@@ -108,7 +108,7 @@ public class RentServiceImpl implements RentService {
     private Float getDiscount(Long userId) throws NotFoundException {
         System.out.println("[" + System.currentTimeMillis() / 1000 + "] Getting discount for user id: " + userId);
         try {
-            return userServiceRestTemplate.exchange("/user/discount/" + userId, HttpMethod.GET, null, Float.class).getBody();
+            return userServiceRestTemplate.exchange("/api/user/discount/" + userId, HttpMethod.GET, null, Float.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND))
                 throw new NotFoundException(String.format("User with id: %d not found.", userId));
@@ -121,7 +121,7 @@ public class RentServiceImpl implements RentService {
     private String getEmail(Long userId) throws NotFoundException {
         System.out.println("[" + System.currentTimeMillis() / 1000 + "] Getting discount for user id: " + userId);
         try {
-            return userServiceRestTemplate.exchange("/user/email/" + userId, HttpMethod.GET, null, String.class).getBody();
+            return userServiceRestTemplate.exchange("/api/user/email/" + userId, HttpMethod.GET, null, String.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND))
                 throw new NotFoundException(String.format("User with id: %d not found.", userId));

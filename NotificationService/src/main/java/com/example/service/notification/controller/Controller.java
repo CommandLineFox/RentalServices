@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.ArrayList;
-
 @org.springframework.stereotype.Controller
 public class Controller {
     NotificationService notificationService;

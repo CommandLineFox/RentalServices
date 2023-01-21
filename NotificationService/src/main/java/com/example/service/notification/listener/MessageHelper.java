@@ -9,10 +9,8 @@ import javax.jms.Message;
 import javax.jms.TextMessage;
 import java.io.IOException;
 
-
 @Component
 public class MessageHelper {
-
     private ObjectMapper objectMapper;
 
     public MessageHelper(ObjectMapper objectMapper) {
@@ -24,7 +22,7 @@ public class MessageHelper {
             String json = ((TextMessage) message).getText();
             T data = objectMapper.readValue(json, clazz);
 
-                return data;
+            return data;
         } catch (IOException exception) {
             throw new RuntimeException("Message parsing fails.", exception);
         }

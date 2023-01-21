@@ -1,6 +1,5 @@
 package com.example.service.notification.mapper;
 
-
 import com.example.service.notification.domain.Notification;
 import com.example.service.notification.dto.CreateNotificationDto;
 import com.example.service.notification.dto.NotificationDto;
@@ -11,9 +10,8 @@ import java.util.Date;
 
 @Component
 public class NotificationMapper {
-    public NotificationDto notificationtoNotificationDto(Notification notification)
-    {
-        NotificationDto notificationDto=new NotificationDto();
+    public NotificationDto notificationtoNotificationDto(Notification notification) {
+        NotificationDto notificationDto = new NotificationDto();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         notificationDto.setNotificationId(notification.getNotificationId());
@@ -25,9 +23,8 @@ public class NotificationMapper {
         return notificationDto;
     }
 
-    public Notification createNotificationDtoToNotification(CreateNotificationDto createNotificationDto)
-    {
-        Notification notification=new Notification();
+    public Notification createNotificationDtoToNotification(CreateNotificationDto createNotificationDto) {
+        Notification notification = new Notification();
 
         notification.setData(createNotificationDto.getData());
         notification.setUser(createNotificationDto.getUser());

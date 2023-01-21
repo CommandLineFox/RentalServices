@@ -9,12 +9,11 @@ import java.util.Properties;
 public class SendMailBySite {
 
     public static void main(String[] args) {
+        String host = "smtp.gmail.com";
+        final String user = "";//change accordingly
+        final String password = "";//change accordingly
 
-        String host="smtp.gmail.com";
-        final String user="";//change accordingly
-        final String password="";//change accordingly
-
-        String to="btomic620rn@raf.rs";//change accordingly
+        String to = "btomic620rn@raf.rs";//change accordingly
 
         //Get the session object
         Properties props = new Properties();
@@ -26,7 +25,7 @@ public class SendMailBySite {
         Session session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(user,password);
+                        return new PasswordAuthentication(user, password);
                     }
                 });
 
@@ -34,12 +33,12 @@ public class SendMailBySite {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(user));
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject("javatpoint");
-            String msg="This is simple program of sending email using JavaMail API";
-            String url="https://www.gledajcrtace.xyz/";
-            String content="<a href='"+url+"'>"+url+"</a>";
-            message.setContent(msg+" "+content,"text/html; charset=utf-8");
+            String msg = "This is simple program of sending email using JavaMail API";
+            String url = "https://www.gledajcrtace.xyz/";
+            String content = "<a href='" + url + "'>" + url + "</a>";
+            message.setContent(msg + " " + content, "text/html; charset=utf-8");
 
 
             //send the message
@@ -47,6 +46,8 @@ public class SendMailBySite {
 
             System.out.println("message sent successfully...");
 
-        } catch (MessagingException e) {e.printStackTrace();}
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

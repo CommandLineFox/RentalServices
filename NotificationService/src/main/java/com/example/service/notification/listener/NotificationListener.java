@@ -1,7 +1,6 @@
 package com.example.service.notification.listener;
 
 import com.example.service.notification.dto.SendNotificationDto;
-import com.example.service.notification.service.NotificationService;
 import com.example.service.notification.service.impl.NotificationServiceImpl;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
@@ -9,14 +8,14 @@ import org.springframework.stereotype.Component;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-
 @Component
 public class NotificationListener {
 
     private MessageHelper messageHelper;
     private NotificationServiceImpl notificationService;
-    public NotificationListener( MessageHelper messageHelper, NotificationServiceImpl notificationService) {
-        this.notificationService= notificationService;
+
+    public NotificationListener(MessageHelper messageHelper, NotificationServiceImpl notificationService) {
+        this.notificationService = notificationService;
         this.messageHelper = messageHelper;
     }
 

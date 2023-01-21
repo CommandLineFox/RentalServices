@@ -6,15 +6,15 @@ import com.example.service.notification.dto.NotificationTypeDto;
 import com.example.service.notification.mapper.NotificationTypeMapper;
 import com.example.service.notification.repository.NotificationTypeRepository;
 import com.example.service.notification.service.NotificationTypeService;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
+
 
 @Component
 public class NotificationTypeServiceImpl implements NotificationTypeService {
-
     NotificationTypeRepository notificationTypeRepository;
     NotificationTypeMapper notificationTypeMapper;
 

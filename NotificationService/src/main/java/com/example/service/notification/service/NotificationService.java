@@ -6,10 +6,7 @@ import com.example.service.notification.dto.SendNotificationDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface NotificationService {
-
     NotificationDto dodajNotifikaciju(CreateNotificationDto createNotificationDto);
 
     Page<NotificationDto> nadjiSveNotifikacije(Pageable pageable);
@@ -23,6 +20,6 @@ public interface NotificationService {
     Page<NotificationDto> nadjiSveNotifikacijePoUserIduIDatumu(Pageable pageable, String userId, String date);
 
     Page<NotificationDto> nadjiSveNotifikacijePoUserIduINotificationTYpu(Pageable pageable, String userId, String notificationType);
-    void deleteById(String id);
 
+    void deleteById(String id);
 }

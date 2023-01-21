@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface NotificationTypeRepository extends JpaRepository<NotificationType,Long> {
+public interface NotificationTypeRepository extends JpaRepository<NotificationType, Long> {
+    NotificationType findNotificationTypeByNotificationTypeId(int notificationTypeId);
 
-    NotificationType  findNotificationTypeByNotificationTypeId(int notificationTypeId);
     void deleteByNotificationTypeId(int id);
 
     NotificationType findByName(String Name);

@@ -1,9 +1,7 @@
 package com.example.service.notification.dto;
 
 public class CreateNotificationDto {
-
     private String user;
-
 
     private String data;
 

@@ -1,7 +1,6 @@
 package com.example.service.notification.dto;
 
 public class NotificationTypeDto {
-
     private int notificationTypeId;
 
     private String name;
